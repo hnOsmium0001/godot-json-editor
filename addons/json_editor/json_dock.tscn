@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/json_editor/json_dock.gd" type="Script" id=1]
+
+[node name="JSON" type="PanelContainer"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VSplitContainer" type="VSplitContainer" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 166.0
+margin_bottom = 40.0
+dragger_visibility = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tools" type="HBoxContainer" parent="VSplitContainer"]
+margin_right = 159.0
+margin_bottom = 20.0
+
+[node name="Open File" type="Button" parent="VSplitContainer/Tools"]
+margin_right = 59.0
+margin_bottom = 20.0
+text = "Open..."
+
+[node name="Save File" type="Button" parent="VSplitContainer/Tools"]
+margin_left = 63.0
+margin_right = 104.0
+margin_bottom = 20.0
+text = "Save"
+
+[node name="Close File" type="Button" parent="VSplitContainer/Tools"]
+margin_left = 108.0
+margin_right = 155.0
+margin_bottom = 20.0
+text = "Close"
+
+[node name="File Name" type="Label" parent="VSplitContainer/Tools"]
+margin_left = 159.0
+margin_top = 3.0
+margin_right = 159.0
+margin_bottom = 17.0
+
+[node name="Tree" type="Tree" parent="VSplitContainer"]
+margin_top = 32.0
+margin_right = 159.0
+margin_bottom = 33.0
+columns = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="VSplitContainer/Tools/Open File" to="." method="_request_open_file"]
+[connection signal="pressed" from="VSplitContainer/Tools/Save File" to="." method="_request_save_file"]
+[connection signal="pressed" from="VSplitContainer/Tools/Close File" to="." method="_request_close_file"]
