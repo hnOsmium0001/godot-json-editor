@@ -6,17 +6,47 @@ const TYPE_COL := 0
 const KEY_COL := 1
 const VALUE_COL := 2
 
-onready var open_button: Button = get_node("VSplitContainer/Tools/Open File")
-onready var file_name: Label = get_node("VSplitContainer/Tools/File Name")
+const INDENTATIONS := [
+	{
+		name = "2 width spaces",
+		indent = "  ",
+	},
+	{
+		name = "4 width spaces",
+		indent = "    ",
+	},
+	{
+		name = "tabs",
+		indent = "	",
+	},
+	{
+		name = "no formatting",
+		indent = "",
+	},
+]
+
+onready var settings: PopupPanel = get_node("Settings")
+onready var indentation_options: OptionButton = get_node("Settings/VSplitContainer/Contents/Indentation/OptionButton")
+
+onready var open_button: Button = get_node("VSplitContainer/Tools/Left/Open File")
+onready var file_name: Label = get_node("VSplitContainer/Tools/Left/File Name")
 onready var tree: Tree = get_node("VSplitContainer/Tree")
+
 var select_file_dialog: EditorFileDialog
 var confirmation_dialog: ConfirmationDialog
 var error_dialog: AcceptDialog
 
 var opened_path: String
+var indent: String = INDENTATIONS[0].indent
 
 func _ready() -> void:
 	self.name = "JSON"
+	
+	indentation_options.clear()
+	for i in range(0, INDENTATIONS.size()):
+		indentation_options.add_item(INDENTATIONS[i].name, i)
+	
+	#get_node("Settings/VSplitContainer/Navigation/Right/Close").icon = get_icon("Close", "EditorIcons")
 	
 	tree.columns = 3
 	select_file_dialog.connect("file_selected", self, "_open_file")
@@ -65,10 +95,10 @@ func _gen_object(node: Dictionary, node_key: String = "", has_key: bool = false,
 				_gen_item(object, "String", value, key, true)
 			TYPE_BOOL:
 				_gen_item(object, "Boolean", value, key, true)
-			TYPE_INT:
-				_gen_item(object, "Integer", value, key, true)
+			TYPE_REAL:
+				_gen_item(object, "Number", value, key, true)
 			_:
-				_gen_item(object, "Unknown", value, key, true)
+				_gen_item(object, "Null", null, key, true)
 
 func _gen_array(node: Array, node_key: String = "", has_key: bool = false, parent: Object = null) -> void:
 	var array := tree.create_item(parent)
@@ -90,10 +120,10 @@ func _gen_array(node: Array, node_key: String = "", has_key: bool = false, paren
 				_gen_item(array, "String", value)
 			TYPE_BOOL:
 				_gen_item(array, "Boolean", value)
-			TYPE_INT:
-				_gen_item(array, "Integer", value)
+			TYPE_REAL:
+				_gen_item(array, "Number", value)
 			_:
-				_gen_item(array, "Unknown", value)
+				_gen_item(array, "Null", null)
 
 func _gen_item(parent: TreeItem, type: String, value, key: String = "", has_key: bool = false) -> TreeItem:
 	var item := tree.create_item(parent)
@@ -108,12 +138,15 @@ func _gen_item(parent: TreeItem, type: String, value, key: String = "", has_key:
 	return item
 
 func _request_save_file() -> void:
+	if opened_path.empty():
+		return
+	
 	var file := File.new()
 	if file.open(opened_path, File.WRITE) != OK:
 		show_error("Error while trying to open JSON file %s." % opened_path)
 		return
 	var json := _reconstruct_object(tree.get_root())
-	file.store_string(JSON.print(json))
+	file.store_string(JSON.print(json, indent))
 	file.close()
 
 func _reconstruct_object(node: TreeItem) -> Dictionary:
@@ -128,10 +161,12 @@ func _reconstruct_object(node: TreeItem) -> Dictionary:
 				result[key] = _reconstruct_array(child)
 			"String":
 				result[key] = child.get_text(VALUE_COL)
-			"Integer":
+			"Number":
 				result[key] = int(child.get_text(VALUE_COL))
 			"Boolean":
 				result[key] = bool(child.get_text(VALUE_COL))
+			"Null":
+				result[key] = null
 		child = child.get_next()
 	return result
 
@@ -146,15 +181,18 @@ func _reconstruct_array(node: TreeItem) -> Array:
 				result.append(_reconstruct_array(child))
 			"String":
 				result.append(child.get_text(VALUE_COL))
-			"Integer":
+			"Number":
 				result.append(int(child.get_text(VALUE_COL)))
 			"Boolean":
 				result.append(bool(child.get_text(VALUE_COL)))
+			"Null":
+				result.append(null)
 		child = child.get_next()
 	return result
 
 func _request_close_file() -> void:
-	confirmation_dialog.popup_centered()
+	if not opened_path.empty():
+		confirmation_dialog.popup_centered()
 
 func _close_file() -> void:
 	opened_path = ""
@@ -165,3 +203,12 @@ func show_error(msg: String) -> void:
 	push_error(msg)
 	error_dialog.dialog_text = msg
 	error_dialog.popup_centered()
+
+func _select_indentation(id):
+	indent = INDENTATIONS[id].indent
+
+func _open_settings():
+	settings.popup_centered()
+
+func _close_settings():
+	settings.visible = false

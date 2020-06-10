@@ -20,12 +20,12 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Addons"
+config/name="Godot JSON Editor"
 config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "json_editor" )
+enabled=PoolStringArray( "editor_icon_previewer" )
 
 [rendering]
 

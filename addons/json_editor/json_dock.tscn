@@ -1,6 +1,22 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/json_editor/json_dock.gd" type="Script" id=1]
+[ext_resource path="res://addons/json_editor/button.gd" type="Script" id=2]
+
+[sub_resource type="Image" id=3]
+data = {
+"data": PoolByteArray( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
+"format": "LumAlpha8",
+"height": 16,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id=2]
+flags = 4
+flags = 4
+image = SubResource( 3 )
+size = Vector2( 16, 16 )
 
 [node name="JSON" type="PanelContainer"]
 script = ExtResource( 1 )
@@ -11,48 +27,151 @@ __meta__ = {
 [node name="VSplitContainer" type="VSplitContainer" parent="."]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 166.0
-margin_bottom = 40.0
+margin_right = 143.0
+margin_bottom = 42.0
 dragger_visibility = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Tools" type="HBoxContainer" parent="VSplitContainer"]
-margin_right = 159.0
-margin_bottom = 20.0
+[node name="Tools" type="HSplitContainer" parent="VSplitContainer"]
+margin_right = 136.0
+margin_bottom = 22.0
 
-[node name="Open File" type="Button" parent="VSplitContainer/Tools"]
-margin_right = 59.0
-margin_bottom = 20.0
-text = "Open..."
+[node name="Left" type="HBoxContainer" parent="VSplitContainer/Tools"]
+margin_right = 96.0
+margin_bottom = 22.0
 
-[node name="Save File" type="Button" parent="VSplitContainer/Tools"]
-margin_left = 63.0
-margin_right = 104.0
-margin_bottom = 20.0
-text = "Save"
+[node name="Settings" type="Button" parent="VSplitContainer/Tools/Left"]
+margin_right = 28.0
+margin_bottom = 22.0
+hint_tooltip = "Open settings"
+icon = SubResource( 2 )
+flat = true
+script = ExtResource( 2 )
+icon_name = "GDScript"
+tooltip = "Open settings"
 
-[node name="Close File" type="Button" parent="VSplitContainer/Tools"]
+[node name="Open File" type="Button" parent="VSplitContainer/Tools/Left"]
+margin_left = 32.0
+margin_right = 60.0
+margin_bottom = 22.0
+icon = SubResource( 2 )
+flat = true
+script = ExtResource( 2 )
+icon_name = "Load"
+tooltip = "Load a JSON file from disk"
+
+[node name="Save File" type="Button" parent="VSplitContainer/Tools/Left"]
+margin_left = 64.0
+margin_right = 92.0
+margin_bottom = 22.0
+icon = SubResource( 2 )
+flat = true
+script = ExtResource( 2 )
+icon_name = "Save"
+tooltip = "Save contents to disk"
+
+[node name="File Name" type="Label" parent="VSplitContainer/Tools/Left"]
+margin_left = 96.0
+margin_top = 4.0
+margin_right = 96.0
+margin_bottom = 18.0
+
+[node name="Right" type="HBoxContainer" parent="VSplitContainer/Tools"]
 margin_left = 108.0
-margin_right = 155.0
-margin_bottom = 20.0
-text = "Close"
+margin_right = 136.0
+margin_bottom = 22.0
+alignment = 2
 
-[node name="File Name" type="Label" parent="VSplitContainer/Tools"]
-margin_left = 159.0
-margin_top = 3.0
-margin_right = 159.0
-margin_bottom = 17.0
+[node name="Close File" type="Button" parent="VSplitContainer/Tools/Right"]
+margin_right = 28.0
+margin_bottom = 22.0
+icon = SubResource( 2 )
+flat = true
+script = ExtResource( 2 )
+icon_name = "Close"
+tooltip = "Close files and discard any changes"
 
 [node name="Tree" type="Tree" parent="VSplitContainer"]
-margin_top = 32.0
-margin_right = 159.0
-margin_bottom = 33.0
+margin_top = 34.0
+margin_right = 136.0
+margin_bottom = 35.0
 columns = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="VSplitContainer/Tools/Open File" to="." method="_request_open_file"]
-[connection signal="pressed" from="VSplitContainer/Tools/Save File" to="." method="_request_save_file"]
-[connection signal="pressed" from="VSplitContainer/Tools/Close File" to="." method="_request_close_file"]
+
+[node name="Settings" type="PopupPanel" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 225.0
+margin_bottom = 67.0
+
+[node name="VSplitContainer" type="VSplitContainer" parent="Settings"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 214.0
+margin_bottom = 56.0
+dragger_visibility = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Navigation" type="HSplitContainer" parent="Settings/VSplitContainer"]
+margin_right = 210.0
+margin_bottom = 20.0
+dragger_visibility = 1
+
+[node name="Left" type="HBoxContainer" parent="Settings/VSplitContainer/Navigation"]
+margin_right = 128.0
+margin_bottom = 20.0
+
+[node name="Title" type="Label" parent="Settings/VSplitContainer/Navigation/Left"]
+margin_top = 3.0
+margin_right = 128.0
+margin_bottom = 17.0
+text = "JSON editor settings"
+
+[node name="Right" type="HBoxContainer" parent="Settings/VSplitContainer/Navigation"]
+margin_left = 140.0
+margin_right = 210.0
+margin_bottom = 20.0
+alignment = 2
+
+[node name="Close" type="Button" parent="Settings/VSplitContainer/Navigation/Right"]
+margin_left = 58.0
+margin_right = 70.0
+margin_bottom = 20.0
+flat = true
+script = ExtResource( 2 )
+icon_name = "Close"
+
+[node name="Contents" type="VBoxContainer" parent="Settings/VSplitContainer"]
+margin_top = 32.0
+margin_right = 210.0
+margin_bottom = 52.0
+
+[node name="Indentation" type="HSplitContainer" parent="Settings/VSplitContainer/Contents"]
+margin_right = 210.0
+margin_bottom = 20.0
+
+[node name="Label" type="Label" parent="Settings/VSplitContainer/Contents/Indentation"]
+margin_top = 3.0
+margin_right = 74.0
+margin_bottom = 17.0
+text = "Indentation"
+
+[node name="OptionButton" type="OptionButton" parent="Settings/VSplitContainer/Contents/Indentation"]
+margin_left = 86.0
+margin_right = 210.0
+margin_bottom = 20.0
+text = "2 width spaces"
+items = [ "2 width spaces", null, false, 0, null, "4 width spaces", null, false, 1, null, "tabs", null, false, 2, null ]
+selected = 0
+[connection signal="pressed" from="VSplitContainer/Tools/Left/Settings" to="." method="_open_settings"]
+[connection signal="pressed" from="VSplitContainer/Tools/Left/Open File" to="." method="_request_open_file"]
+[connection signal="pressed" from="VSplitContainer/Tools/Left/Save File" to="." method="_request_save_file"]
+[connection signal="pressed" from="VSplitContainer/Tools/Right/Close File" to="." method="_request_close_file"]
+[connection signal="pressed" from="Settings/VSplitContainer/Navigation/Right/Close" to="." method="_close_settings"]
+[connection signal="item_selected" from="Settings/VSplitContainer/Contents/Indentation/OptionButton" to="." method="_select_indentation"]
