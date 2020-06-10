@@ -14,14 +14,14 @@ var confirmation_dialog: ConfirmationDialog
 var error_dialog: AcceptDialog
 
 var opened_path: String
-var json: Dictionary
-var modified_not_saved: bool
 
 func _ready() -> void:
 	self.name = "JSON"
 	
 	tree.columns = 3
 	select_file_dialog.connect("file_selected", self, "_open_file")
+	confirmation_dialog.dialog_text = "There may have been changes, discard them?"
+	confirmation_dialog.connect("confirmed", self, "_close_file")
 
 func _request_open_file() -> void:
 	select_file_dialog.popup_centered_ratio()
@@ -38,9 +38,7 @@ func _open_file(file_path: String) -> void:
 		return
 	file.close()
 	
-	self.opened_path = file_path
-	self.json = parse_result.result
-	self.modified_not_saved = false
+	opened_path = file_path
 	file_name.text = select_file_dialog.current_file
 	
 	_gen_object(parse_result.result)
@@ -64,35 +62,13 @@ func _gen_object(node: Dictionary, node_key: String = "", has_key: bool = false,
 			TYPE_ARRAY:
 				_gen_array(value as Array, key, true, object)
 			TYPE_STRING:
-				var item := tree.create_item(object)
-				item.set_cell_mode(TYPE_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(TYPE_COL, "String")
-				item.set_cell_mode(KEY_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(KEY_COL, key)
-				item.set_editable(KEY_COL, true)
-				item.set_cell_mode(VALUE_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(VALUE_COL, "\"%s\"" % value)
-				item.set_editable(VALUE_COL, true)
+				_gen_item(object, "String", value, key, true)
 			TYPE_BOOL:
-				var item := tree.create_item(object)
-				item.set_cell_mode(TYPE_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(TYPE_COL, "Boolean")
-				item.set_cell_mode(KEY_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(KEY_COL, key)
-				item.set_editable(KEY_COL, true)
-				item.set_cell_mode(VALUE_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(VALUE_COL, str(value))
-				item.set_editable(VALUE_COL, true)
+				_gen_item(object, "Boolean", value, key, true)
+			TYPE_INT:
+				_gen_item(object, "Integer", value, key, true)
 			_:
-				var item := tree.create_item(object)
-				item.set_cell_mode(TYPE_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(TYPE_COL, "Unknown")
-				item.set_cell_mode(KEY_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(KEY_COL, key)
-				item.set_editable(KEY_COL, true)
-				item.set_cell_mode(VALUE_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(VALUE_COL, str(value))
-				item.set_editable(VALUE_COL, true)
+				_gen_item(object, "Unknown", value, key, true)
 
 func _gen_array(node: Array, node_key: String = "", has_key: bool = false, parent: Object = null) -> void:
 	var array := tree.create_item(parent)
@@ -111,48 +87,77 @@ func _gen_array(node: Array, node_key: String = "", has_key: bool = false, paren
 			TYPE_ARRAY:
 				_gen_array(value as Array, "", false, array)
 			TYPE_STRING:
-				var item := tree.create_item(array)
-				item.set_cell_mode(TYPE_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(TYPE_COL, "String")
-				item.set_cell_mode(VALUE_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(VALUE_COL, "\"%s\"" % value)
-				item.set_editable(VALUE_COL, true)
-			_:
-				var item := tree.create_item(array)
-				item.set_cell_mode(TYPE_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(TYPE_COL, "Unknown")
-				item.set_cell_mode(VALUE_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(VALUE_COL, str(value))
-				item.set_editable(VALUE_COL, true)
+				_gen_item(array, "String", value)
 			TYPE_BOOL:
-				var item := tree.create_item(array)
-				item.set_cell_mode(TYPE_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(TYPE_COL, "Boolean")
-				item.set_cell_mode(VALUE_COL, TreeItem.CELL_MODE_STRING)
-				item.set_text(VALUE_COL, str(value))
-				item.set_editable(VALUE_COL, true)
+				_gen_item(array, "Boolean", value)
+			TYPE_INT:
+				_gen_item(array, "Integer", value)
+			_:
+				_gen_item(array, "Unknown", value)
+
+func _gen_item(parent: TreeItem, type: String, value, key: String = "", has_key: bool = false) -> TreeItem:
+	var item := tree.create_item(parent)
+	item.set_cell_mode(TYPE_COL, TreeItem.CELL_MODE_STRING)
+	item.set_text(TYPE_COL, type)
+	if has_key:
+		item.set_text(KEY_COL, key)
+		item.set_editable(KEY_COL, true)
+	item.set_cell_mode(VALUE_COL, TreeItem.CELL_MODE_STRING)
+	item.set_text(VALUE_COL, str(value))
+	item.set_editable(VALUE_COL, true)
+	return item
 
 func _request_save_file() -> void:
 	var file := File.new()
 	if file.open(opened_path, File.WRITE) != OK:
 		show_error("Error while trying to open JSON file %s." % opened_path)
 		return
+	var json := _reconstruct_object(tree.get_root())
 	file.store_string(JSON.print(json))
 	file.close()
-	
-	modified_not_saved = false
+
+func _reconstruct_object(node: TreeItem) -> Dictionary:
+	var result := {}
+	var child := node.get_children()
+	while child:
+		var key := child.get_text(KEY_COL)
+		match child.get_text(TYPE_COL):
+			"Object":
+				result[key] = _reconstruct_object(child)
+			"Array":
+				result[key] = _reconstruct_array(child)
+			"String":
+				result[key] = child.get_text(VALUE_COL)
+			"Integer":
+				result[key] = int(child.get_text(VALUE_COL))
+			"Boolean":
+				result[key] = bool(child.get_text(VALUE_COL))
+		child = child.get_next()
+	return result
+
+func _reconstruct_array(node: TreeItem) -> Array:
+	var result := []
+	var child := node.get_children()
+	while child:
+		match child.get_text(TYPE_COL):
+			"Object":
+				result.append(_reconstruct_object(child))
+			"Array":
+				result.append(_reconstruct_array(child))
+			"String":
+				result.append(child.get_text(VALUE_COL))
+			"Integer":
+				result.append(int(child.get_text(VALUE_COL)))
+			"Boolean":
+				result.append(bool(child.get_text(VALUE_COL)))
+		child = child.get_next()
+	return result
 
 func _request_close_file() -> void:
-	if modified_not_saved:
-		confirmation_dialog.dialog_text = "You have changes that are not saved, discard?"
-		confirmation_dialog.connect("confirmed", self, "_close_file")
-		confirmation_dialog.popup_centered()
-	else:
-		_close_file()
+	confirmation_dialog.popup_centered()
 
 func _close_file() -> void:
-	self.opened_path = ""
-	self.json = {}
+	opened_path = ""
 	file_name.text = ""
 	tree.clear()
 
