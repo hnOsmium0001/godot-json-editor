@@ -6,7 +6,7 @@ const TYPE_COL := 0
 const KEY_COL := 1
 const VALUE_COL := 2
 
-const FORMATTING_DATA := [
+const INDENTATIONS := [
 	{
 		name = "2 wide spaces",
 		indent = "  ",
@@ -29,6 +29,10 @@ const FORMATTING_DATA := [
 	},
 ]
 
+onready var settings: PopupPanel = get_node("Settings")
+onready var indentation_option: OptionButton = get_node("Settings/VSplitContainer/Contents/Indentation/OptionButton")
+
+var select_file_dialog: EditorFileDialog
 onready var close_file_confirmation: ConfirmationDialog = get_node("Close File Confirmation")
 onready var error_dialog: AcceptDialog = get_node("Error Dialog")
 
@@ -36,12 +40,15 @@ onready var open_button: Button = get_node("VBoxContainer/Tools/Left/Open File")
 onready var file_name: Label = get_node("VBoxContainer/Tools/Left/File Name")
 onready var tree: Tree = get_node("VBoxContainer/Tree")
 
-var select_file_dialog: EditorFileDialog
-
 var opened_path: String
+var indentation_idx: int
 
 func _ready() -> void:
 	name = "JSON"
+	
+	indentation_option.clear()
+	for i in range(0, INDENTATIONS.size()):
+		indentation_option.add_item(INDENTATIONS[i].name, i)
 	
 	tree.columns = 3
 	select_file_dialog.connect("file_selected", self, "_open_file")
@@ -140,9 +147,7 @@ func _request_save_file() -> void:
 		show_error("Error while trying to open JSON file %s." % opened_path)
 		return
 	var json := _reconstruct_object(tree.get_root())
-	# TODO indent doesn't work
-	var formatting_idx: int = ProjectSettings.get_setting("plugins/json_editor/formatting")
-	var indent: String = FORMATTING_DATA[formatting_idx].indent
+	var indent: String = INDENTATIONS[indentation_idx].indent
 	file.store_string(JSON.print(json, indent))
 	file.close()
 
@@ -200,3 +205,12 @@ func show_error(msg: String) -> void:
 	push_error(msg)
 	error_dialog.dialog_text = msg
 	error_dialog.popup_centered()
+
+func _close_settings() -> void:
+	settings.visible = false
+
+func _open_settings() -> void:
+	settings.popup_centered()
+
+func _select_indentation(id: int) -> void:
+	indentation_idx = id
