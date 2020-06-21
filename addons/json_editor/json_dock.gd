@@ -6,14 +6,18 @@ const TYPE_COL := 0
 const KEY_COL := 1
 const VALUE_COL := 2
 
-const INDENTATIONS := [
+const FORMATTING_DATA := [
 	{
-		name = "2 width spaces",
+		name = "2 wide spaces",
 		indent = "  ",
 	},
 	{
-		name = "4 width spaces",
+		name = "4 wide spaces",
 		indent = "    ",
+	},
+	{
+		name = "8 wide spaces",
+		indent = "        ",
 	},
 	{
 		name = "tabs",
@@ -25,41 +29,31 @@ const INDENTATIONS := [
 	},
 ]
 
-onready var settings: PopupPanel = get_node("Settings")
-onready var indentation_options: OptionButton = get_node("Settings/VSplitContainer/Contents/Indentation/OptionButton")
+onready var close_file_confirmation: ConfirmationDialog = get_node("Close File Confirmation")
+onready var error_dialog: AcceptDialog = get_node("Error Dialog")
 
-onready var open_button: Button = get_node("VSplitContainer/Tools/Left/Open File")
-onready var file_name: Label = get_node("VSplitContainer/Tools/Left/File Name")
-onready var tree: Tree = get_node("VSplitContainer/Tree")
+onready var open_button: Button = get_node("VBoxContainer/Tools/Left/Open File")
+onready var file_name: Label = get_node("VBoxContainer/Tools/Left/File Name")
+onready var tree: Tree = get_node("VBoxContainer/Tree")
 
 var select_file_dialog: EditorFileDialog
-var confirmation_dialog: ConfirmationDialog
-var error_dialog: AcceptDialog
 
 var opened_path: String
-var indent: String = INDENTATIONS[0].indent
 
 func _ready() -> void:
-	self.name = "JSON"
-	
-	indentation_options.clear()
-	for i in range(0, INDENTATIONS.size()):
-		indentation_options.add_item(INDENTATIONS[i].name, i)
-	
-	#get_node("Settings/VSplitContainer/Navigation/Right/Close").icon = get_icon("Close", "EditorIcons")
+	name = "JSON"
 	
 	tree.columns = 3
 	select_file_dialog.connect("file_selected", self, "_open_file")
-	confirmation_dialog.dialog_text = "There may have been changes, discard them?"
-	confirmation_dialog.connect("confirmed", self, "_close_file")
 
 func _request_open_file() -> void:
 	select_file_dialog.popup_centered_ratio()
 
 func _open_file(file_path: String) -> void:
 	var file := File.new()
-	if file.open(file_path, File.READ) != OK:
-		show_error("Error while trying to open JSON file %s." % file_path)
+	var file_open_err := file.open(file_path, File.READ)
+	if file_open_err != OK:
+		show_error("Error while trying to open JSON file %s. Error code: %d" % [file_path, file_open_err])
 		return
 	
 	var parse_result := JSON.parse(file.get_as_text())
@@ -146,6 +140,9 @@ func _request_save_file() -> void:
 		show_error("Error while trying to open JSON file %s." % opened_path)
 		return
 	var json := _reconstruct_object(tree.get_root())
+	# TODO indent doesn't work
+	var formatting_idx: int = ProjectSettings.get_setting("plugins/json_editor/formatting")
+	var indent: String = FORMATTING_DATA[formatting_idx].indent
 	file.store_string(JSON.print(json, indent))
 	file.close()
 
@@ -192,7 +189,7 @@ func _reconstruct_array(node: TreeItem) -> Array:
 
 func _request_close_file() -> void:
 	if not opened_path.empty():
-		confirmation_dialog.popup_centered()
+		close_file_confirmation.popup_centered()
 
 func _close_file() -> void:
 	opened_path = ""
@@ -203,12 +200,3 @@ func show_error(msg: String) -> void:
 	push_error(msg)
 	error_dialog.dialog_text = msg
 	error_dialog.popup_centered()
-
-func _select_indentation(id):
-	indent = INDENTATIONS[id].indent
-
-func _open_settings():
-	settings.popup_centered()
-
-func _close_settings():
-	settings.visible = false

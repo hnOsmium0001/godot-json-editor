@@ -19,159 +19,94 @@ image = SubResource( 3 )
 size = Vector2( 16, 16 )
 
 [node name="JSON" type="PanelContainer"]
+margin_right = 118.0
+margin_bottom = 41.0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VSplitContainer" type="VSplitContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 143.0
-margin_bottom = 42.0
-dragger_visibility = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+margin_right = 111.0
+margin_bottom = 34.0
 
-[node name="Tools" type="HSplitContainer" parent="VSplitContainer"]
-margin_right = 136.0
+[node name="Tools" type="HSplitContainer" parent="VBoxContainer"]
+margin_right = 104.0
 margin_bottom = 22.0
 
-[node name="Left" type="HBoxContainer" parent="VSplitContainer/Tools"]
-margin_right = 96.0
+[node name="Left" type="HBoxContainer" parent="VBoxContainer/Tools"]
+margin_right = 64.0
 margin_bottom = 22.0
 
-[node name="Settings" type="Button" parent="VSplitContainer/Tools/Left"]
+[node name="Open File" type="Button" parent="VBoxContainer/Tools/Left"]
 margin_right = 28.0
 margin_bottom = 22.0
-hint_tooltip = "Open settings"
-icon = SubResource( 2 )
-flat = true
-script = ExtResource( 2 )
-icon_name = "GDScript"
-tooltip = "Open settings"
-
-[node name="Open File" type="Button" parent="VSplitContainer/Tools/Left"]
-margin_left = 32.0
-margin_right = 60.0
-margin_bottom = 22.0
+hint_tooltip = "Load a JSON file from disk"
 icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Load"
 tooltip = "Load a JSON file from disk"
 
-[node name="Save File" type="Button" parent="VSplitContainer/Tools/Left"]
-margin_left = 64.0
-margin_right = 92.0
+[node name="Save File" type="Button" parent="VBoxContainer/Tools/Left"]
+margin_left = 32.0
+margin_right = 60.0
 margin_bottom = 22.0
+hint_tooltip = "Save contents to disk"
 icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Save"
 tooltip = "Save contents to disk"
 
-[node name="File Name" type="Label" parent="VSplitContainer/Tools/Left"]
-margin_left = 96.0
+[node name="File Name" type="Label" parent="VBoxContainer/Tools/Left"]
+margin_left = 64.0
 margin_top = 4.0
-margin_right = 96.0
+margin_right = 64.0
 margin_bottom = 18.0
 
-[node name="Right" type="HBoxContainer" parent="VSplitContainer/Tools"]
-margin_left = 108.0
-margin_right = 136.0
+[node name="Right" type="HBoxContainer" parent="VBoxContainer/Tools"]
+margin_left = 76.0
+margin_right = 104.0
 margin_bottom = 22.0
 alignment = 2
 
-[node name="Close File" type="Button" parent="VSplitContainer/Tools/Right"]
+[node name="Close File" type="Button" parent="VBoxContainer/Tools/Right"]
 margin_right = 28.0
 margin_bottom = 22.0
+hint_tooltip = "Close files and discard any changes"
 icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Close"
 tooltip = "Close files and discard any changes"
 
-[node name="Tree" type="Tree" parent="VSplitContainer"]
-margin_top = 34.0
-margin_right = 136.0
-margin_bottom = 35.0
+[node name="Tree" type="Tree" parent="VBoxContainer"]
+margin_top = 26.0
+margin_right = 104.0
+margin_bottom = 27.0
+size_flags_vertical = 3
 columns = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Settings" type="PopupPanel" parent="."]
+[node name="Close File Confirmation" type="ConfirmationDialog" parent="."]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 225.0
-margin_bottom = 67.0
+margin_right = 207.0
+margin_bottom = 77.0
+dialog_text = "There may have been changes, discard them?"
 
-[node name="VSplitContainer" type="VSplitContainer" parent="Settings"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 214.0
-margin_bottom = 56.0
-dragger_visibility = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Navigation" type="HSplitContainer" parent="Settings/VSplitContainer"]
-margin_right = 210.0
-margin_bottom = 20.0
-dragger_visibility = 1
-
-[node name="Left" type="HBoxContainer" parent="Settings/VSplitContainer/Navigation"]
-margin_right = 128.0
-margin_bottom = 20.0
-
-[node name="Title" type="Label" parent="Settings/VSplitContainer/Navigation/Left"]
-margin_top = 3.0
-margin_right = 128.0
-margin_bottom = 17.0
-text = "JSON editor settings"
-
-[node name="Right" type="HBoxContainer" parent="Settings/VSplitContainer/Navigation"]
-margin_left = 140.0
-margin_right = 210.0
-margin_bottom = 20.0
-alignment = 2
-
-[node name="Close" type="Button" parent="Settings/VSplitContainer/Navigation/Right"]
-margin_left = 58.0
-margin_right = 70.0
-margin_bottom = 20.0
-flat = true
-script = ExtResource( 2 )
-icon_name = "Close"
-
-[node name="Contents" type="VBoxContainer" parent="Settings/VSplitContainer"]
-margin_top = 32.0
-margin_right = 210.0
-margin_bottom = 52.0
-
-[node name="Indentation" type="HSplitContainer" parent="Settings/VSplitContainer/Contents"]
-margin_right = 210.0
-margin_bottom = 20.0
-
-[node name="Label" type="Label" parent="Settings/VSplitContainer/Contents/Indentation"]
-margin_top = 3.0
-margin_right = 74.0
-margin_bottom = 17.0
-text = "Indentation"
-
-[node name="OptionButton" type="OptionButton" parent="Settings/VSplitContainer/Contents/Indentation"]
-margin_left = 86.0
-margin_right = 210.0
-margin_bottom = 20.0
-text = "2 width spaces"
-items = [ "2 width spaces", null, false, 0, null, "4 width spaces", null, false, 1, null, "tabs", null, false, 2, null ]
-selected = 0
-[connection signal="pressed" from="VSplitContainer/Tools/Left/Settings" to="." method="_open_settings"]
-[connection signal="pressed" from="VSplitContainer/Tools/Left/Open File" to="." method="_request_open_file"]
-[connection signal="pressed" from="VSplitContainer/Tools/Left/Save File" to="." method="_request_save_file"]
-[connection signal="pressed" from="VSplitContainer/Tools/Right/Close File" to="." method="_request_close_file"]
-[connection signal="pressed" from="Settings/VSplitContainer/Navigation/Right/Close" to="." method="_close_settings"]
-[connection signal="item_selected" from="Settings/VSplitContainer/Contents/Indentation/OptionButton" to="." method="_select_indentation"]
+[node name="Error Dialog" type="AcceptDialog" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 143.0
+margin_bottom = 65.0
+dialog_autowrap = true
+[connection signal="pressed" from="VBoxContainer/Tools/Left/Open File" to="." method="_request_open_file"]
+[connection signal="pressed" from="VBoxContainer/Tools/Left/Save File" to="." method="_request_save_file"]
+[connection signal="pressed" from="VBoxContainer/Tools/Right/Close File" to="." method="_request_close_file"]
+[connection signal="confirmed" from="Close File Confirmation" to="." method="_close_file"]
