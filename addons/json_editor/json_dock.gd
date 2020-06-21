@@ -6,6 +6,33 @@ const TYPE_COL := 0
 const KEY_COL := 1
 const VALUE_COL := 2
 
+const TYPES := [
+	{
+		name = "Object",
+		default_val = {},
+	},
+	{
+		name = "Array",
+		default_val = [],
+	},
+	{
+		name = "String",
+		default_val = "",
+	},
+	{
+		name = "Number",
+		default_val = 0,
+	},
+	{
+		name = "Boolean",
+		default_val = false,
+	},
+	{
+		name = "Null",
+		default_val = null,
+	},
+]
+
 const INDENTATIONS := [
 	{
 		name = "2 wide spaces",
@@ -29,14 +56,11 @@ const INDENTATIONS := [
 	},
 ]
 
-onready var settings: PopupPanel = get_node("Settings")
-onready var indentation_option: OptionButton = get_node("Settings/VSplitContainer/Contents/Indentation/OptionButton")
-
 var select_file_dialog: EditorFileDialog
+onready var settings: PopupPanel = get_node("Settings")
 onready var close_file_confirmation: ConfirmationDialog = get_node("Close File Confirmation")
 onready var error_dialog: AcceptDialog = get_node("Error Dialog")
 
-onready var open_button: Button = get_node("VBoxContainer/Tools/Left/Open File")
 onready var file_name: Label = get_node("VBoxContainer/Tools/Left/File Name")
 onready var tree: Tree = get_node("VBoxContainer/Tree")
 
@@ -46,9 +70,15 @@ var indentation_idx: int
 func _ready() -> void:
 	name = "JSON"
 	
+	var indentation_option: OptionButton = get_node("Settings/VSplitContainer/Contents/Indentation/OptionButton")
 	indentation_option.clear()
 	for i in range(0, INDENTATIONS.size()):
 		indentation_option.add_item(INDENTATIONS[i].name, i)
+	
+	var add_element_button: MenuButton = get_node("VBoxContainer/Tree Manipulation Tools/Add Entry")
+	for i in range(0, TYPES.size()):
+		add_element_button.get_popup().add_item(TYPES[i].name, i)
+	add_element_button.get_popup().connect("id_pressed", self, "_add_element")
 	
 	tree.columns = 3
 	select_file_dialog.connect("file_selected", self, "_open_file")
@@ -214,3 +244,43 @@ func _open_settings() -> void:
 
 func _select_indentation(id: int) -> void:
 	indentation_idx = id
+
+
+func _add_element(id: int) -> void:
+	var sel := tree.get_selected()
+	if sel == null:
+		return
+	
+	var key: String
+	var has_key := false
+	match sel.get_text(TYPE_COL):
+		"Object":
+			key = ""
+			has_key = true
+		"Array":
+			has_key = false
+		_:
+			show_error("Cannot add to a non-container element!")
+			return
+	
+	var type: String = TYPES[id].name
+	var default_val = TYPES[id].default_val
+	match type:
+		"Object":
+			_gen_object(default_val, key, has_key, sel)
+		"Array":
+			_gen_array(default_val, key, has_key, sel)
+		_:
+			_gen_item(sel, type, default_val, key, has_key)
+		
+
+func _remove_selected_element() -> void:
+	var sel := tree.get_selected()
+	if sel == null:
+		return
+	
+	var parent := sel.get_parent()
+	if parent == null:
+		show_error("Cannot remove the root node!")
+	else:
+		parent.remove_child(sel)

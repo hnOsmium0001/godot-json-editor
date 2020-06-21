@@ -7,7 +7,7 @@ a scripted tree control with each JSON entry <=> a TreeItem.
 
 - [x] Docked panel
 - [x] Editing existing entry values
-- [ ] Add/remove entries
+- [x] Add/remove entries
 - [ ] Open JSON files directly in the FileSystem tab
 
 ## Godot Asset Store

@@ -30,7 +30,7 @@ __meta__ = {
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 127.0
-margin_bottom = 34.0
+margin_bottom = 60.0
 
 [node name="Tools" type="HSplitContainer" parent="VBoxContainer"]
 margin_right = 120.0
@@ -85,6 +85,7 @@ alignment = 2
 [node name="Close File" type="Button" parent="VBoxContainer/Tools/Right"]
 margin_right = 28.0
 margin_bottom = 22.0
+rect_pivot_offset = Vector2( -753.801, -92.3996 )
 hint_tooltip = "Close files and discard any changes"
 icon = SubResource( 2 )
 flat = true
@@ -92,10 +93,30 @@ script = ExtResource( 2 )
 icon_name = "Close"
 tooltip = "Close files and discard any changes"
 
-[node name="Tree" type="Tree" parent="VBoxContainer"]
+[node name="Tree Manipulation Tools" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 26.0
 margin_right = 120.0
-margin_bottom = 27.0
+margin_bottom = 48.0
+
+[node name="Add Entry" type="MenuButton" parent="VBoxContainer/Tree Manipulation Tools"]
+margin_right = 28.0
+margin_bottom = 22.0
+icon = SubResource( 2 )
+script = ExtResource( 2 )
+icon_name = "Add"
+
+[node name="Remove Entry" type="Button" parent="VBoxContainer/Tree Manipulation Tools"]
+margin_left = 32.0
+margin_right = 44.0
+margin_bottom = 22.0
+flat = true
+script = ExtResource( 2 )
+icon_name = "Remove"
+
+[node name="Tree" type="Tree" parent="VBoxContainer"]
+margin_top = 52.0
+margin_right = 120.0
+margin_bottom = 53.0
 size_flags_vertical = 3
 columns = 3
 __meta__ = {
@@ -171,6 +192,7 @@ margin_bottom = 65.0
 [connection signal="pressed" from="VBoxContainer/Tools/Left/Open File" to="." method="_request_open_file"]
 [connection signal="pressed" from="VBoxContainer/Tools/Left/Save File" to="." method="_request_save_file"]
 [connection signal="pressed" from="VBoxContainer/Tools/Right/Close File" to="." method="_request_close_file"]
+[connection signal="pressed" from="VBoxContainer/Tree Manipulation Tools/Remove Entry" to="." method="_remove_selected_element"]
 [connection signal="pressed" from="Settings/VSplitContainer/Navigation Bar/Right/Close" to="." method="_close_settings"]
 [connection signal="item_selected" from="Settings/VSplitContainer/Contents/Indentation/OptionButton" to="." method="_select_indentation"]
 [connection signal="confirmed" from="Close File Confirmation" to="." method="_close_file"]
