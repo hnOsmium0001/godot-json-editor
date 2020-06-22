@@ -65,7 +65,8 @@ onready var file_name: Label = get_node("VBoxContainer/Tools/Left/File Name")
 onready var tree: Tree = get_node("VBoxContainer/Tree")
 
 var opened_path: String
-var indentation_idx: int
+var indentation_idx: int = 0
+var auto_parenting: bool = false
 
 func _ready() -> void:
 	name = "JSON"
@@ -230,6 +231,7 @@ func _close_file() -> void:
 	opened_path = ""
 	file_name.text = ""
 	tree.clear()
+	
 
 func show_error(msg: String) -> void:
 	push_error(msg)
@@ -245,9 +247,11 @@ func _open_settings() -> void:
 func _select_indentation(id: int) -> void:
 	indentation_idx = id
 
+func _set_auto_parenting_option(pressed: bool) -> void:
+	auto_parenting = pressed
 
-func _add_element(id: int) -> void:
-	var sel := tree.get_selected()
+func _add_element(id: int, parent: TreeItem = null) -> void:
+	var sel := tree.get_selected() if parent == null else parent
 	if sel == null:
 		return
 	
@@ -260,7 +264,17 @@ func _add_element(id: int) -> void:
 		"Array":
 			has_key = false
 		_:
-			show_error("Cannot add to a non-container element!")
+			if auto_parenting:
+				# auto-parenting result
+				var apr: TreeItem = sel
+				while apr != null:
+					var type := apr.get_text(TYPE_COL)
+					if type == "Object" or type == "Array":
+						break
+					apr = apr.get_parent()
+				_add_element(id, apr)
+			else:
+				show_error("Cannot add to a non-container element!")
 			return
 	
 	var type: String = TYPES[id].name

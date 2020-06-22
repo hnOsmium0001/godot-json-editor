@@ -43,10 +43,10 @@ margin_bottom = 22.0
 [node name="Open Settings" type="Button" parent="VBoxContainer/Tools/Left"]
 margin_right = 12.0
 margin_bottom = 22.0
+hint_tooltip = "Open settings popup"
 flat = true
 script = ExtResource( 2 )
 icon_name = "GDScript"
-tooltip = "Open settings popup"
 
 [node name="Open File" type="Button" parent="VBoxContainer/Tools/Left"]
 margin_left = 16.0
@@ -57,7 +57,6 @@ icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Load"
-tooltip = "Load a JSON file from disk"
 
 [node name="Save File" type="Button" parent="VBoxContainer/Tools/Left"]
 margin_left = 48.0
@@ -68,7 +67,6 @@ icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Save"
-tooltip = "Save contents to disk"
 
 [node name="File Name" type="Label" parent="VBoxContainer/Tools/Left"]
 margin_left = 80.0
@@ -91,7 +89,6 @@ icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Close"
-tooltip = "Close files and discard any changes"
 
 [node name="Tree Manipulation Tools" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 26.0
@@ -124,57 +121,90 @@ __meta__ = {
 }
 
 [node name="Settings" type="PopupPanel" parent="."]
-margin_right = 8.0
-margin_bottom = 8.0
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 189.0
+margin_bottom = 95.0
 
 [node name="VSplitContainer" type="VSplitContainer" parent="Settings"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 178.0
+margin_bottom = 84.0
 dragger_visibility = 1
 
 [node name="Navigation Bar" type="HSplitContainer" parent="Settings/VSplitContainer"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_right = 174.0
+margin_bottom = 20.0
 dragger_visibility = 1
 
 [node name="Left" type="HBoxContainer" parent="Settings/VSplitContainer/Navigation Bar"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_right = 127.0
+margin_bottom = 20.0
 
 [node name="Title" type="Label" parent="Settings/VSplitContainer/Navigation Bar/Left"]
-margin_right = 40.0
-margin_bottom = 14.0
+margin_top = 3.0
+margin_right = 127.0
+margin_bottom = 17.0
 text = "JSON Editor Settings"
 
 [node name="Right" type="HBoxContainer" parent="Settings/VSplitContainer/Navigation Bar"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_left = 139.0
+margin_right = 174.0
+margin_bottom = 20.0
 alignment = 2
 
 [node name="Close" type="Button" parent="Settings/VSplitContainer/Navigation Bar/Right"]
-margin_right = 12.0
+margin_left = 23.0
+margin_right = 35.0
 margin_bottom = 20.0
 flat = true
 script = ExtResource( 2 )
 icon_name = "Close"
 
 [node name="Contents" type="VBoxContainer" parent="Settings/VSplitContainer"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_top = 32.0
+margin_right = 174.0
+margin_bottom = 80.0
 
 [node name="Indentation" type="HSplitContainer" parent="Settings/VSplitContainer/Contents"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_right = 174.0
+margin_bottom = 20.0
 dragger_visibility = 1
 
 [node name="Label" type="Label" parent="Settings/VSplitContainer/Contents/Indentation"]
-margin_right = 40.0
-margin_bottom = 14.0
+margin_top = 3.0
+margin_right = 133.0
+margin_bottom = 17.0
+hint_tooltip = "Type of indentation to use when saving JSON to disk."
+mouse_filter = 0
+size_flags_horizontal = 3
 text = "Indentation"
 
 [node name="OptionButton" type="OptionButton" parent="Settings/VSplitContainer/Contents/Indentation"]
-margin_right = 29.0
+margin_left = 145.0
+margin_right = 174.0
 margin_bottom = 20.0
+
+[node name="Auto-parenting" type="HSplitContainer" parent="Settings/VSplitContainer/Contents"]
+margin_top = 24.0
+margin_right = 174.0
+margin_bottom = 48.0
+dragger_visibility = 1
+
+[node name="Label" type="Label" parent="Settings/VSplitContainer/Contents/Auto-parenting"]
+margin_top = 5.0
+margin_right = 138.0
+margin_bottom = 19.0
+hint_tooltip = "When trying to add a child to a non-object/array element, automatically and silently go for the nearest object/array."
+mouse_filter = 0
+size_flags_horizontal = 3
+text = "Auto-find valid parent"
+
+[node name="CheckBox" type="CheckBox" parent="Settings/VSplitContainer/Contents/Auto-parenting"]
+margin_left = 150.0
+margin_right = 174.0
+margin_bottom = 24.0
 
 [node name="Close File Confirmation" type="ConfirmationDialog" parent="."]
 margin_left = 7.0
@@ -195,4 +225,5 @@ margin_bottom = 65.0
 [connection signal="pressed" from="VBoxContainer/Tree Manipulation Tools/Remove Entry" to="." method="_remove_selected_element"]
 [connection signal="pressed" from="Settings/VSplitContainer/Navigation Bar/Right/Close" to="." method="_close_settings"]
 [connection signal="item_selected" from="Settings/VSplitContainer/Contents/Indentation/OptionButton" to="." method="_select_indentation"]
+[connection signal="toggled" from="Settings/VSplitContainer/Contents/Auto-parenting/CheckBox" to="." method="_set_auto_parenting_option"]
 [connection signal="confirmed" from="Close File Confirmation" to="." method="_close_file"]
