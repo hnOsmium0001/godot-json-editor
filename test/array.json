@@ -1,0 +1,17 @@
+[
+	{
+		"a": "array",
+		"b": 1,
+		"c": [
+			true,
+			false
+		]
+	},
+	2,
+	3,
+	null,
+	[
+		"nested",
+		"array"
+	]
+]

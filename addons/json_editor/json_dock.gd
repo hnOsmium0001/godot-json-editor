@@ -85,6 +85,10 @@ func _ready() -> void:
 	select_file_dialog.connect("file_selected", self, "_open_file")
 
 func _request_open_file() -> void:
+	if not opened_path.empty():
+		error_dialog.dialog_text = "A file is already open. Please close the current file before opening a new one."
+		error_dialog.popup_centered()
+		return
 	select_file_dialog.popup_centered_ratio()
 
 func _open_file(file_path: String) -> void:
@@ -103,7 +107,20 @@ func _open_file(file_path: String) -> void:
 	opened_path = file_path
 	file_name.text = select_file_dialog.current_file
 	
-	_gen_object(parse_result.result)
+	var root = parse_result.result
+	match typeof(root):
+		TYPE_DICTIONARY:
+			_gen_object(root as Dictionary, "", false)
+		TYPE_ARRAY:
+			_gen_array(root as Array, "", false)
+		TYPE_STRING:
+			_gen_item(null, "String", root)
+		TYPE_BOOL:
+			_gen_item(null, "Boolean", root)
+		TYPE_REAL:
+			_gen_item(null, "Number", root)
+		_:
+			_gen_item(null, "Null", null)
 
 func _gen_object(node: Dictionary, node_key: String = "", has_key: bool = false, parent: Object = null) -> void:
 	var object := tree.create_item(parent)

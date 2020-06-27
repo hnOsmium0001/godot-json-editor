@@ -29,54 +29,58 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 127.0
+margin_right = 143.0
 margin_bottom = 60.0
 
 [node name="Tools" type="HSplitContainer" parent="VBoxContainer"]
-margin_right = 120.0
+margin_right = 136.0
 margin_bottom = 22.0
 
 [node name="Left" type="HBoxContainer" parent="VBoxContainer/Tools"]
-margin_right = 80.0
+margin_right = 96.0
 margin_bottom = 22.0
 
 [node name="Open Settings" type="Button" parent="VBoxContainer/Tools/Left"]
-margin_right = 12.0
+margin_right = 28.0
 margin_bottom = 22.0
 hint_tooltip = "Open settings popup"
+icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "GDScript"
+type = "EditorIcons"
 
 [node name="Open File" type="Button" parent="VBoxContainer/Tools/Left"]
-margin_left = 16.0
-margin_right = 44.0
+margin_left = 32.0
+margin_right = 60.0
 margin_bottom = 22.0
 hint_tooltip = "Load a JSON file from disk"
 icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Load"
+type = "EditorIcons"
 
 [node name="Save File" type="Button" parent="VBoxContainer/Tools/Left"]
-margin_left = 48.0
-margin_right = 76.0
+margin_left = 64.0
+margin_right = 92.0
 margin_bottom = 22.0
 hint_tooltip = "Save contents to disk"
 icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Save"
+type = "EditorIcons"
 
 [node name="File Name" type="Label" parent="VBoxContainer/Tools/Left"]
-margin_left = 80.0
+margin_left = 96.0
 margin_top = 4.0
-margin_right = 80.0
+margin_right = 96.0
 margin_bottom = 18.0
 
 [node name="Right" type="HBoxContainer" parent="VBoxContainer/Tools"]
-margin_left = 92.0
-margin_right = 120.0
+margin_left = 108.0
+margin_right = 136.0
 margin_bottom = 22.0
 alignment = 2
 
@@ -89,30 +93,35 @@ icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Close"
+type = "EditorIcons"
 
 [node name="Tree Manipulation Tools" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 26.0
-margin_right = 120.0
+margin_right = 136.0
 margin_bottom = 48.0
 
 [node name="Add Entry" type="MenuButton" parent="VBoxContainer/Tree Manipulation Tools"]
 margin_right = 28.0
 margin_bottom = 22.0
 icon = SubResource( 2 )
+items = [ "Object", null, 0, false, false, 0, 0, null, "", false, "Array", null, 0, false, false, 1, 0, null, "", false, "String", null, 0, false, false, 2, 0, null, "", false, "Number", null, 0, false, false, 3, 0, null, "", false, "Boolean", null, 0, false, false, 4, 0, null, "", false, "Null", null, 0, false, false, 5, 0, null, "", false ]
 script = ExtResource( 2 )
 icon_name = "Add"
+type = "EditorIcons"
 
 [node name="Remove Entry" type="Button" parent="VBoxContainer/Tree Manipulation Tools"]
 margin_left = 32.0
-margin_right = 44.0
+margin_right = 60.0
 margin_bottom = 22.0
+icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Remove"
+type = "EditorIcons"
 
 [node name="Tree" type="Tree" parent="VBoxContainer"]
 margin_top = 52.0
-margin_right = 120.0
+margin_right = 136.0
 margin_bottom = 53.0
 size_flags_vertical = 3
 columns = 3
@@ -158,9 +167,11 @@ alignment = 2
 margin_left = 23.0
 margin_right = 35.0
 margin_bottom = 20.0
+icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Close"
+type = "EditorIcons"
 
 [node name="Contents" type="VBoxContainer" parent="Settings/VSplitContainer"]
 margin_top = 32.0
@@ -185,6 +196,9 @@ text = "Indentation"
 margin_left = 145.0
 margin_right = 174.0
 margin_bottom = 20.0
+text = "2 wide spaces"
+items = [ "2 wide spaces", null, false, 0, null, "4 wide spaces", null, false, 1, null, "8 wide spaces", null, false, 2, null, "tabs", null, false, 3, null, "no formatting", null, false, 4, null ]
+selected = 0
 
 [node name="Auto-parenting" type="HSplitContainer" parent="Settings/VSplitContainer/Contents"]
 margin_top = 24.0
