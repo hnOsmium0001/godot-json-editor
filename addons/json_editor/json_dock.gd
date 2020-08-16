@@ -65,6 +65,7 @@ onready var file_name: Label = get_node("VBoxContainer/Tools/Left/File Name")
 onready var tree: Tree = get_node("VBoxContainer/Tree")
 
 var opened_path: String
+var has_unsaved_edits: bool = false
 var indentation_idx: int = 0
 var auto_parenting: bool = false
 
@@ -77,6 +78,7 @@ func _ready() -> void:
 		indentation_option.add_item(INDENTATIONS[i].name, i)
 	
 	var add_element_button: MenuButton = get_node("VBoxContainer/Tree Manipulation Tools/Add Entry")
+	add_element_button.get_popup().clear()
 	for i in range(0, TYPES.size()):
 		add_element_button.get_popup().add_item(TYPES[i].name, i)
 	add_element_button.get_popup().connect("id_pressed", self, "_add_element")
@@ -105,6 +107,7 @@ func _open_file(file_path: String) -> void:
 	file.close()
 	
 	opened_path = file_path
+	has_unsaved_edits = false
 	file_name.text = select_file_dialog.current_file
 	
 	var root = parse_result.result
@@ -198,6 +201,7 @@ func _request_save_file() -> void:
 	var indent: String = INDENTATIONS[indentation_idx].indent
 	file.store_string(JSON.print(json, indent))
 	file.close()
+	has_unsaved_edits = false
 
 func _reconstruct_object(node: TreeItem) -> Dictionary:
 	var result := {}
@@ -241,8 +245,10 @@ func _reconstruct_array(node: TreeItem) -> Array:
 	return result
 
 func _request_close_file() -> void:
-	if not opened_path.empty():
+	if not opened_path.empty() and has_unsaved_edits:
 		close_file_confirmation.popup_centered()
+	else:
+		_close_file()
 
 func _close_file() -> void:
 	opened_path = ""
@@ -315,3 +321,7 @@ func _remove_selected_element() -> void:
 		show_error("Cannot remove the root node!")
 	else:
 		parent.remove_child(sel)
+
+
+func _on_item_edited():
+	has_unsaved_edits = true

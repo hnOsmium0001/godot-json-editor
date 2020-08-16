@@ -32,13 +32,14 @@ margin_top = 7.0
 margin_right = 143.0
 margin_bottom = 60.0
 
-[node name="Tools" type="HSplitContainer" parent="VBoxContainer"]
+[node name="Tools" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 136.0
 margin_bottom = 22.0
 
 [node name="Left" type="HBoxContainer" parent="VBoxContainer/Tools"]
-margin_right = 96.0
+margin_right = 104.0
 margin_bottom = 22.0
+size_flags_horizontal = 3
 
 [node name="Open Settings" type="Button" parent="VBoxContainer/Tools/Left"]
 margin_right = 28.0
@@ -48,7 +49,6 @@ icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "GDScript"
-type = "EditorIcons"
 
 [node name="Open File" type="Button" parent="VBoxContainer/Tools/Left"]
 margin_left = 32.0
@@ -59,7 +59,6 @@ icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Load"
-type = "EditorIcons"
 
 [node name="Save File" type="Button" parent="VBoxContainer/Tools/Left"]
 margin_left = 64.0
@@ -70,7 +69,6 @@ icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Save"
-type = "EditorIcons"
 
 [node name="File Name" type="Label" parent="VBoxContainer/Tools/Left"]
 margin_left = 96.0
@@ -93,7 +91,6 @@ icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Close"
-type = "EditorIcons"
 
 [node name="Tree Manipulation Tools" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 26.0
@@ -104,10 +101,8 @@ margin_bottom = 48.0
 margin_right = 28.0
 margin_bottom = 22.0
 icon = SubResource( 2 )
-items = [ "Object", null, 0, false, false, 0, 0, null, "", false, "Array", null, 0, false, false, 1, 0, null, "", false, "String", null, 0, false, false, 2, 0, null, "", false, "Number", null, 0, false, false, 3, 0, null, "", false, "Boolean", null, 0, false, false, 4, 0, null, "", false, "Null", null, 0, false, false, 5, 0, null, "", false ]
 script = ExtResource( 2 )
 icon_name = "Add"
-type = "EditorIcons"
 
 [node name="Remove Entry" type="Button" parent="VBoxContainer/Tree Manipulation Tools"]
 margin_left = 32.0
@@ -117,7 +112,6 @@ icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Remove"
-type = "EditorIcons"
 
 [node name="Tree" type="Tree" parent="VBoxContainer"]
 margin_top = 52.0
@@ -171,7 +165,6 @@ icon = SubResource( 2 )
 flat = true
 script = ExtResource( 2 )
 icon_name = "Close"
-type = "EditorIcons"
 
 [node name="Contents" type="VBoxContainer" parent="Settings/VSplitContainer"]
 margin_top = 32.0
@@ -237,6 +230,7 @@ margin_bottom = 65.0
 [connection signal="pressed" from="VBoxContainer/Tools/Left/Save File" to="." method="_request_save_file"]
 [connection signal="pressed" from="VBoxContainer/Tools/Right/Close File" to="." method="_request_close_file"]
 [connection signal="pressed" from="VBoxContainer/Tree Manipulation Tools/Remove Entry" to="." method="_remove_selected_element"]
+[connection signal="item_edited" from="VBoxContainer/Tree" to="." method="_on_item_edited"]
 [connection signal="pressed" from="Settings/VSplitContainer/Navigation Bar/Right/Close" to="." method="_close_settings"]
 [connection signal="item_selected" from="Settings/VSplitContainer/Contents/Indentation/OptionButton" to="." method="_select_indentation"]
 [connection signal="toggled" from="Settings/VSplitContainer/Contents/Auto-parenting/CheckBox" to="." method="_set_auto_parenting_option"]
